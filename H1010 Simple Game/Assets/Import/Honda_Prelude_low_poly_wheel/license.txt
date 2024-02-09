@@ -1,0 +1,11 @@
+Model Information:
+* title:	Honda Prelude low poly wheel
+* source:	https://sketchfab.com/3d-models/honda-prelude-low-poly-wheel-21fb8386ded040a59a5eefe2e6281e93
+* author:	JPepe (https://sketchfab.com/jpepe)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Honda Prelude low poly wheel" (https://sketchfab.com/3d-models/honda-prelude-low-poly-wheel-21fb8386ded040a59a5eefe2e6281e93) by JPepe (https://sketchfab.com/jpepe) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

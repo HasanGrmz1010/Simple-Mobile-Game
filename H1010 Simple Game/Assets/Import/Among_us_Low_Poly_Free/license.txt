@@ -1,0 +1,11 @@
+Model Information:
+* title:	Among us Low Poly Free
+* source:	https://sketchfab.com/3d-models/among-us-low-poly-free-dd1b720336ab455a87cab070d7ccded2
+* author:	3d game artist lab (https://sketchfab.com/3d.games.artist.lab)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Among us Low Poly Free" (https://sketchfab.com/3d-models/among-us-low-poly-free-dd1b720336ab455a87cab070d7ccded2) by 3d game artist lab (https://sketchfab.com/3d.games.artist.lab) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
