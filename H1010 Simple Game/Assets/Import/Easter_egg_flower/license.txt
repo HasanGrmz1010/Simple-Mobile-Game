@@ -1,0 +1,11 @@
+Model Information:
+* title:	Easter egg flower
+* source:	https://sketchfab.com/3d-models/easter-egg-flower-a6b950fd4ba447b8a18c9bfdf31cea7f
+* author:	Pylimas (https://sketchfab.com/Pylimas)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Easter egg flower" (https://sketchfab.com/3d-models/easter-egg-flower-a6b950fd4ba447b8a18c9bfdf31cea7f) by Pylimas (https://sketchfab.com/Pylimas) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

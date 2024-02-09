@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dumb Box
+* source:	https://sketchfab.com/3d-models/dumb-box-4732a9f750094c5f910710ab10bf8d54
+* author:	MysteryPancake (https://sketchfab.com/mysterypancake)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dumb Box" (https://sketchfab.com/3d-models/dumb-box-4732a9f750094c5f910710ab10bf8d54) by MysteryPancake (https://sketchfab.com/mysterypancake) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Burger
+* source:	https://sketchfab.com/3d-models/burger-ae07b87675b24418b6763cd18cab83e2
+* author:	Ashlynn McManness (https://sketchfab.com/Ashlynn.McManness)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Burger" (https://sketchfab.com/3d-models/burger-ae07b87675b24418b6763cd18cab83e2) by Ashlynn McManness (https://sketchfab.com/Ashlynn.McManness) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

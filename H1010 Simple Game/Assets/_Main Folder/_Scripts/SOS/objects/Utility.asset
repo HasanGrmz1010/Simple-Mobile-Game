@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a070f8b61653454cb2879cfb4d14465, type: 3}
+  m_Name: Utility
+  m_EditorClassIdentifier: 
+  itemIcons:
+  - {fileID: 21300000, guid: c6292f6947afa1843be8a93cb607bbc8, type: 3}
+  - {fileID: 21300000, guid: 90afd78e9f719344ea482f830479ac77, type: 3}
+  - {fileID: 21300000, guid: aceef2f90ce0a9148be7163e5f4415b0, type: 3}
+  - {fileID: 21300000, guid: be8bcb4df3e6d3647ba33adf5c8593f6, type: 3}
+  - {fileID: 21300000, guid: 9d3b6b354635c6c47b49a8c7740643a6, type: 3}
+  - {fileID: 21300000, guid: 45b549f5de557fe44b3e00f9cc881b0b, type: 3}
+  - {fileID: 21300000, guid: da65abc31cbed56458336abd2d20ff44, type: 3}
+  gameItems:
+  - {fileID: 4836094985851317974, guid: 0a7ef9b70a39bbd4693d9e5f3b53cee9, type: 3}
+  - {fileID: 1256101844371969140, guid: 9b07276f3fa8489488f93bc13a69d60f, type: 3}
+  - {fileID: 8417048173432569652, guid: 560b9c50fab09a348b3df941ed6bf32b, type: 3}
+  - {fileID: 1419082138406095539, guid: e36ad61b6dbb1734a9d531403a6d1202, type: 3}
+  - {fileID: 7478908483020272917, guid: 3064338495779c14e8ea23e9b653d131, type: 3}
+  - {fileID: 8842727041442461505, guid: 65fd8cb62677e644c8acedc575b85cfc, type: 3}
+  - {fileID: 6992805109598954863, guid: fcb6b22aa07c8e94ca9bb1bf9f172c40, type: 3}
+  itemTags:
+  - amogus
+  - apple
+  - duck
+  - egg pink
+  - lemon
+  - burger
+  - tire
