@@ -20,6 +20,6 @@ public class EconomyManager : MonoBehaviour
     }
     #endregion
 
-    static private int TotalCoin;
-    static private int TotalGem;
+    public int TotalCoin;
+    public int TotalStar;
 }

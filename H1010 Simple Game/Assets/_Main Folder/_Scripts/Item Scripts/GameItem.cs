@@ -5,21 +5,31 @@ using DG.Tweening;
 
 public class GameItem : MonoBehaviour, ISelectable
 {
+    bool interactable;
+    bool used;
     Rigidbody rgb;
     public string item_tag;
 
     private void OnEnable()
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onPausedGame += GamePaused_Behaviour;
+        LevelEventManager.onResumedGame += GameResume_Behaviour;
     }
 
     private void OnDisable()
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onPausedGame -= GamePaused_Behaviour;
+        LevelEventManager.onResumedGame -= GameResume_Behaviour;
     }
 
     private void Start()
     {
+        used = false;
+        interactable = true;
         rgb = GetComponent<Rigidbody>();
     }
 
@@ -33,7 +43,10 @@ public class GameItem : MonoBehaviour, ISelectable
 
     public void TouchStart()
     {
-        if (BoxManager.instance.currentBox != null && LevelEventManager.instance.ableToSelect)
+        if (BoxManager.instance.currentBox != null &&
+            LevelEventManager.instance.ableToSelect &&
+            interactable &&
+            !used)
         {
             transform.DOScale(1.1f, .25f).SetEase(Ease.OutCirc);
         }
@@ -46,9 +59,14 @@ public class GameItem : MonoBehaviour, ISelectable
 
     public void TouchRelease()
     {
-        if (BoxManager.instance.currentBox != null && LevelEventManager.instance.ableToSelect)
+        if (BoxManager.instance.currentBox != null &&
+            LevelEventManager.instance.ableToSelect &&
+            interactable &&
+            !used)
         {
             Transform currentBox = BoxManager.instance.currentBox;
+            interactable = true;
+            used = true;
             rgb.useGravity = false;
             transform.DOMoveY(transform.position.y + 1f, .25f).SetEase(Ease.OutCirc).OnComplete(() =>
             {
@@ -63,11 +81,22 @@ public class GameItem : MonoBehaviour, ISelectable
         }
     }
 
+    // Scales to 1.1 and deactivates item (pop)
     void GameOver_Behaviour()
     {
         transform.DOScale(1.25f, .2f).SetEase(Ease.InOutQuad).SetDelay(Random.Range(1.5f, 6f)).OnComplete(() =>
         {
             this.gameObject.SetActive(false);
         });
+    }
+
+    void GamePaused_Behaviour()
+    {
+        interactable = false;
+    }
+
+    void GameResume_Behaviour()
+    {
+        interactable = true;
     }
 }

@@ -10,6 +10,7 @@ public class Timer : MonoBehaviour
     [SerializeField] Ease timerEase;
 
     bool smallerThan10;
+    public bool timeFlow;
 
     public float totalTime;
     private float currentTime;
@@ -18,15 +19,30 @@ public class Timer : MonoBehaviour
     public Image watch_img;
     public TextMeshProUGUI timerText;
 
+    private void OnEnable()
+    {
+        LevelEventManager.onPausedGame += GamePaused_Behaviour;
+        LevelEventManager.onNoLifeRemains += GamePaused_Behaviour;
+        LevelEventManager.onResumedGame += GameResumed_Behaviour;
+    }
+
+    private void OnDisable()
+    {
+        LevelEventManager.onPausedGame -= GamePaused_Behaviour;
+        LevelEventManager.onNoLifeRemains -= GamePaused_Behaviour;
+        LevelEventManager.onResumedGame -= GameResumed_Behaviour;
+    }
+
     void Start()
     {
         smallerThan10 = false;
+        timeFlow = true;
         currentTime = totalTime;
     }
 
     void Update()
     {
-        if (currentTime > 0f)
+        if (currentTime > 0f && timeFlow)
         {
             currentTime -= Time.deltaTime;
 
@@ -72,5 +88,15 @@ public class Timer : MonoBehaviour
         {
             watch_img.DOColor(Color.white, 1f).SetLoops(-1);
         });
+    }
+
+    void GamePaused_Behaviour()
+    {
+        timeFlow = false;
+    }
+
+    void GameResumed_Behaviour()
+    {
+        timeFlow = true;
     }
 }

@@ -11,15 +11,22 @@ public class Box : MonoBehaviour
     List<GameItem> boxContent = new List<GameItem>();
     [SerializeField] string order_tag;
     public float box_speed;
+    float temp_speed_val;
 
     private void OnEnable()
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onPausedGame += PausedGame_Behaviour;
+        LevelEventManager.onResumedGame += ResumeGame_Behaviour;
     }
 
     private void OnDisable()
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onPausedGame -= PausedGame_Behaviour;
+        LevelEventManager.onResumedGame -= ResumeGame_Behaviour;
     }
 
     private void Start()
@@ -65,6 +72,8 @@ public class Box : MonoBehaviour
         if (correctItemCount == 3)
         {
             Debug.Log("BOX SUCCESS");
+            LevelEconomyManager.instance.levelStar++;
+            box_speed = 0f;
             ItemManager.instance.CurrentObjectTags.Remove(order_tag);
             InGameGUIManager.instance.BoxSuccess_GUI_Handle();
             transform.DORotate(Vector3.up * 180, .5f, RotateMode.FastBeyond360).SetEase(Ease.InCubic);
@@ -77,6 +86,15 @@ public class Box : MonoBehaviour
         else
         {
             Debug.Log("BOX FAIL");
+            if (LevelEconomyManager.instance.life > 0)
+            {
+                LevelEconomyManager.instance.life--;
+                InGameGUIManager.instance.BoxFail_GUI_Handle();
+                if (LevelEconomyManager.instance.life == 0)
+                {
+                    LevelEventManager.onNoLifeRemains();
+                }
+            }
             transform.DORotate(Vector3.up * 360, .5f, RotateMode.FastBeyond360).SetEase(Ease.InCubic);
             transform.DOScale(.01f, .5f).SetEase(Ease.InBack).OnComplete(() =>
             {
@@ -107,17 +125,6 @@ public class Box : MonoBehaviour
         else return;
     }
 
-    void GameOver_Behaviour()
-    {
-        box_speed = 0f;
-        transform.DORotate(Vector3.up * 360, .5f, RotateMode.FastBeyond360).SetEase(Ease.InCubic).SetDelay(1f);
-        transform.DOScale(.01f, .5f).SetEase(Ease.InBack).SetDelay(1f).OnComplete(() =>
-        {
-            Destroy(this.gameObject);
-            //this.gameObject.SetActive(false);
-        });
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "box_dump")
@@ -129,5 +136,27 @@ public class Box : MonoBehaviour
                 //this.gameObject.SetActive(false);
             });
         }
+    }
+
+    void GameOver_Behaviour()
+    {
+        box_speed = 0f;
+        transform.DORotate(Vector3.up * 360, .5f, RotateMode.FastBeyond360).SetEase(Ease.InCubic).SetDelay(1f);
+        transform.DOScale(.01f, .5f).SetEase(Ease.InBack).SetDelay(1f).OnComplete(() =>
+        {
+            Destroy(this.gameObject);
+            //this.gameObject.SetActive(false);
+        });
+    }
+
+    void PausedGame_Behaviour()
+    {
+        temp_speed_val = box_speed;
+        box_speed = 0f;
+    }
+
+    void ResumeGame_Behaviour()
+    {
+        box_speed = temp_speed_val;
     }
 }

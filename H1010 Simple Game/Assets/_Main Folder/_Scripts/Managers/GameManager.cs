@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -23,11 +21,10 @@ public class GameManager : MonoBehaviour
     public enum GameState
     {
         playing,
+        paused,
         timeUp_GameOver,
         noLife_GameOver,
         orderComplete_LevelPassed
     }
     public GameState state = new GameState();
-
-
 }

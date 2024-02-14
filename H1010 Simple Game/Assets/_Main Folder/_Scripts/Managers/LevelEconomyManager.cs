@@ -22,7 +22,9 @@ public class LevelEconomyManager : MonoBehaviour
     private void Start()
     {
         levelStar = 0;
+        life = 3;
     }
 
     public int levelStar;
+    public int life;
 }
