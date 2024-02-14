@@ -17,6 +17,8 @@ public class ConveyorBelt : MonoBehaviour
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onLevelPassed += GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame += GamePaused_Behaviour;
         LevelEventManager.onResumedGame += GameResume_Behaviour;
     }
@@ -25,6 +27,8 @@ public class ConveyorBelt : MonoBehaviour
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onLevelPassed -= GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame -= GamePaused_Behaviour;
         LevelEventManager.onResumedGame -= GameResume_Behaviour;
     }

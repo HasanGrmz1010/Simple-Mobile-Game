@@ -23,8 +23,16 @@ public class LevelEconomyManager : MonoBehaviour
     {
         levelStar = 0;
         life = 3;
+
+        starGoal = Random.Range(7, 10);
     }
 
+    public int starGoal;
     public int levelStar;
     public int life;
+
+    public bool hasReachedStarGoal()
+    {
+        return (levelStar == starGoal);
+    }
 }

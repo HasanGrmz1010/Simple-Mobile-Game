@@ -14,6 +14,8 @@ public class GameItem : MonoBehaviour, ISelectable
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onLevelPassed += GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame += GamePaused_Behaviour;
         LevelEventManager.onResumedGame += GameResume_Behaviour;
     }
@@ -22,6 +24,8 @@ public class GameItem : MonoBehaviour, ISelectable
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onLevelPassed -= GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame -= GamePaused_Behaviour;
         LevelEventManager.onResumedGame -= GameResume_Behaviour;
     }
@@ -84,6 +88,7 @@ public class GameItem : MonoBehaviour, ISelectable
     // Scales to 1.1 and deactivates item (pop)
     void GameOver_Behaviour()
     {
+        interactable = false;
         transform.DOScale(1.25f, .2f).SetEase(Ease.InOutQuad).SetDelay(Random.Range(1.5f, 6f)).OnComplete(() =>
         {
             this.gameObject.SetActive(false);
