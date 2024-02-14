@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,16 +27,26 @@ public class MainMenuGUIManager : MonoBehaviour
     [SerializeField] SO_GameData gameData;
     [SerializeField] Ease menuEase;
 
+    [Header("______________ IMAGES ______________")]
+    [SerializeField] Sprite level_chest_img;
+    [SerializeField] Sprite star_chest_img;
+    [SerializeField] Image chest_arrow;
+
     [Header("______________ TEXTS ______________")]
     [SerializeField] TextMeshProUGUI coinValueText;
-    
+    [SerializeField] TextMeshProUGUI starValueText;
+    [SerializeField] TextMeshProUGUI openChestText;
 
     [Header("______________ PANELS ______________")]
+    [SerializeField] Image OpenChestScreen_img;
+    [SerializeField] RectTransform OpenChestPanel;
     [SerializeField] Image settingsBackground;
     [SerializeField] RectTransform settingsMenu;
     [SerializeField] RectTransform allPages;
+    [SerializeField] Image curtain;
 
     [Header("______________ BUTTONS ______________")]
+    [SerializeField] Button revealChestButton;
     [SerializeField] Button continueButton;
     [SerializeField] Button settingCloseButton;
     [SerializeField] Button settingsOpenButton;
@@ -51,18 +62,21 @@ public class MainMenuGUIManager : MonoBehaviour
 
     private void Start()
     {
+        int levelChestProgress = gameData.LEVEL % 5;
+
         // Button Subscribtions
         continueButton.onClick.AddListener(ContinueGame_Button);
         settingCloseButton.onClick.AddListener(Settings_CloseButton);
         settingsOpenButton.onClick.AddListener(Settings_OpenButton);
 
-        // Loop Tween Set
-        continueButton.transform.DOScale(1.1f, .75f).SetEase(Ease.InOutQuad).OnComplete(() =>
+        // Continue Button Loop Tween
+        continueButton.transform.DOScale(1.1f, 1f).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
-            continueButton.transform.DOScale(1f, .75f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+            continueButton.transform.DOScale(1f, 1f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         });
 
-        coinValueText.text = gameData.COIN.ToString();
+        coinValueText.text = EconomyManager.instance.TotalCoin.ToString();
+        starValueText.text = EconomyManager.instance.TotalStar.ToString();
     }
 
     #region MM Page Functions
@@ -117,6 +131,68 @@ public class MainMenuGUIManager : MonoBehaviour
     // 11111 FUNCTIONS --------------------------------------------------------
     void ContinueGame_Button()
     {
-        SceneManager.LoadScene(gameData.LEVEL);
+        curtain.gameObject.SetActive(true);
+        curtain.DOColor(new Color(0f, 0f, 0f, 1f), .35f).OnComplete(() =>
+        {
+            SceneManager.LoadScene(gameData.LEVEL);
+        });
+    }
+
+    // Misc FUNCTIONS -------------------------------------------------------------------
+    public void ChestRevealMenu_Button(string _chestType)
+    {
+        switch (_chestType)
+        {
+            case "level":
+                revealChestButton.image.sprite = level_chest_img;
+                break;
+            case "star":
+                revealChestButton.image.sprite = star_chest_img;
+                break;
+            default:
+                break;
+        }
+
+        revealChestButton.transform.DORotate(new Vector3(0f, 0f, 15f), 1f, RotateMode.FastBeyond360).
+        SetEase(Ease.InOutSine).
+        OnComplete(() =>
+        {
+            revealChestButton.transform.DOScale(1.1f, .5f).
+            SetEase(Ease.InOutCirc).
+            OnComplete(() =>
+            {
+                revealChestButton.transform.DOScale(1f, .5f).
+                SetEase(Ease.InOutCirc).
+                SetLoops(-1, LoopType.Yoyo);
+            });
+
+            revealChestButton.transform.DORotate(new Vector3(0f, 0f, -15f), 1f, RotateMode.FastBeyond360).
+            SetEase(Ease.InOutSine).
+            SetLoops(-1, LoopType.Yoyo);
+        });
+
+        chest_arrow.rectTransform.DOLocalMoveY(chest_arrow.rectTransform.localPosition.y - 85f, .5f).
+            SetEase(Ease.InOutCubic).
+            OnComplete(() =>
+            {
+                chest_arrow.rectTransform.DOLocalMoveY(chest_arrow.rectTransform.localPosition.y + 85f, .5f).
+                SetEase(Ease.InOutCubic).
+                SetLoops(-1, LoopType.Yoyo);
+            });
+
+        OpenChestScreen_img.gameObject.SetActive(true);
+        OpenChestScreen_img.DOColor(new Color(0f, 0f, 0f, .85f), .3f);
+        OpenChestPanel.DOScale(1f, .4f).SetEase(Ease.OutBack);
+    }
+    public void OpenChest_Button()
+    {
+        if (revealChestButton.image.sprite == level_chest_img)
+        {
+            Debug.Log("LEVEL CHEST");
+        }
+        else if (revealChestButton.image.sprite == star_chest_img)
+        {
+            Debug.Log("STAR CHEST");
+        }
     }
 }

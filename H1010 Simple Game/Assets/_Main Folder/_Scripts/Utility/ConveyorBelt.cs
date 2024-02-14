@@ -16,11 +16,17 @@ public class ConveyorBelt : MonoBehaviour
     private void OnEnable()
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onPausedGame += GamePaused_Behaviour;
+        LevelEventManager.onResumedGame += GameResume_Behaviour;
     }
 
     private void OnDisable()
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
+        LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onPausedGame -= GamePaused_Behaviour;
+        LevelEventManager.onResumedGame -= GameResume_Behaviour;
     }
 
     private void Start()
@@ -46,5 +52,15 @@ public class ConveyorBelt : MonoBehaviour
     void GameOver_Behaviour()
     {
         ableToSpawn = false;
+    }
+
+    void GamePaused_Behaviour()
+    {
+        ableToSpawn = false;
+    }
+
+    void GameResume_Behaviour()
+    {
+        ableToSpawn = true;
     }
 }

@@ -23,4 +23,7 @@ public class LevelEventManager : MonoBehaviour
     public bool ableToSelect = false;
 
     public static Action onTimesUp;
+    public static Action onNoLifeRemains;
+    public static Action onPausedGame;
+    public static Action onResumedGame;
 }

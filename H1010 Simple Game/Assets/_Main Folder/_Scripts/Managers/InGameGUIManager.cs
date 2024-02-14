@@ -23,74 +23,204 @@ public class InGameGUIManager : MonoBehaviour
     }
     #endregion
 
+    int lifeHeart_index;
     [SerializeField] Canvas inGameCanvas;
     [SerializeField] GameObject star_img;
-
     [SerializeField] SO_GameData gameData;
     [SerializeField] RectTransform starSpawnPoint;
 
     [Header("___________ PANELS ___________")]
+    
     [SerializeField] Image GameOverScreen_img;
+    [SerializeField] Image PauseMenuScreen_img;
     [SerializeField] RectTransform GameOverPanel;
+    [SerializeField] RectTransform PauseMenuPanel;
     [SerializeField] RectTransform starIndicator;
+    [SerializeField] Image curtain;
 
     [Header("___________ TEXTS ___________")]
     [SerializeField] TextMeshProUGUI starAmountText;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI gameOverReasonText;
+    [SerializeField] TextMeshProUGUI gameOverStarValueText;
+    
 
     [Header("___________ BUTTONS ___________")]
     [SerializeField] Button pauseButton;
+    [SerializeField] Button retryButton;
+
+    [Header("___________ ICONS ___________")]
+    [SerializeField] Image gameOverStarIMG;
+    [SerializeField] Image adIcon;
+    [SerializeField] List<Image> hearts = new List<Image>();
 
     private void OnEnable()
     {
         // Event Subscribtions
         LevelEventManager.onTimesUp += NoTimeLeft_GameOverScreen;
+        LevelEventManager.onNoLifeRemains += NoLife_GameOverScreen;
     }
 
     private void OnDisable()
     {
         LevelEventManager.onTimesUp -= NoTimeLeft_GameOverScreen;
+        LevelEventManager.onNoLifeRemains -= NoLife_GameOverScreen;
+    }
+
+    private void OnDestroy()
+    {
+        
     }
 
     private void Start()
     {
+        lifeHeart_index = 2;
+        curtain.gameObject.SetActive(true);
+        curtain.DOColor(new Color(0f, 0f, 0f, 0f), .35f).OnComplete(() =>
+        {
+            curtain.gameObject.SetActive(false);
+        });
         levelText.text = "LEVEL " + SceneManager.GetActiveScene().buildIndex.ToString();
+    }
+
+    public void BoxFail_GUI_Handle()
+    {
+        hearts[lifeHeart_index].transform.DOScale(.025f, .4f).
+        SetEase(Ease.InBack).
+        OnComplete(() =>
+        {
+            hearts[lifeHeart_index].gameObject.SetActive(false);
+            lifeHeart_index--;
+        });
+        
     }
 
     public void BoxSuccess_GUI_Handle()
     {
-        GameObject star = Instantiate(star_img, starSpawnPoint.position, Quaternion.Euler(45f,0f,0f), inGameCanvas.transform);
+        GameObject star = Instantiate(star_img, starSpawnPoint.position,
+            Quaternion.Euler(45f,0f,0f),
+            inGameCanvas.transform);
+
         star.transform.DOScale(1f, .5f).OnComplete(() =>
         {
             star.transform.DOScale(.75f, .5f);
         });
-        star.transform.DOMove(starIndicator.GetChild(0).GetChild(1).position, 1.25f).SetEase(Ease.InOutCubic).OnComplete(() =>
+
+        star.transform.DOMove(starIndicator.GetChild(0).GetChild(1).position, 1f).
+            SetEase(Ease.InOutCubic).
+            OnComplete(() =>
         {
             Destroy(star.gameObject);
             starIndicator.DOPunchScale(Vector3.one / 5f, .35f, 1, .5f);
-            LevelEconomyManager.instance.levelStar++;
             starAmountText.text = LevelEconomyManager.instance.levelStar.ToString();
         });
         
     }
 
-    public void PauseMenuButton()
+    // BUTTON FUNCTIONS ----------------------------------------------------------------
+    public void PauseMenu_Button()
     {
-
+        GameManager.instance.state = GameManager.GameState.paused;
+        LevelEventManager.onPausedGame();
+        PauseMenuScreen_img.gameObject.SetActive(true);
+        PauseMenuScreen_img.DOColor(new Color(.78f, 0f, .4f, .88f), .5f);
+        PauseMenuPanel.DOLocalMoveY(0f, .5f).SetEase(Ease.OutBack);
     }
 
-    // GAME STATE FUNCTIONS ---------------------------------------------------
+    public void ResumeGame_Button()
+    {
+        GameManager.instance.state = GameManager.GameState.playing;
+        PauseMenuPanel.DOLocalMoveY(-2000f, .5f).SetEase(Ease.InBack);
+        PauseMenuScreen_img.DOColor(new Color(0f, 0f, 0f, 0f), .6f).OnComplete(() =>
+        {
+            PauseMenuScreen_img.gameObject.SetActive(false);
+            LevelEventManager.onResumedGame();
+        });
+    }
+
+    public void ReturnMenu_Button()
+    {
+        curtain.gameObject.SetActive(true);
+        curtain.DOColor(new Color(0f, 0f, 0f, 1f), .35f).OnComplete(() =>
+        {
+            SceneManager.LoadScene(0);
+        });
+    }
+
+    public void Retry_Button()
+    {
+        // SHOW REWARD AD
+        curtain.gameObject.SetActive(true);
+        curtain.DOColor(new Color(0f, 0f, 0f, 1f), .35f).OnComplete(() =>
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        });
+    }
+
+    #region Game End State Functions
     void NoTimeLeft_GameOverScreen()
     {
         GameOverScreen_img.gameObject.SetActive(true);
-        GameOverScreen_img.DOColor(new Color(0f, 0f, 0f, .85f), 1f).SetEase(Ease.OutCubic);
+        gameOverReasonText.text = "NO TIME LEFT";
+        gameOverStarValueText.text = LevelEconomyManager.instance.levelStar.ToString();
+        GameOverScreen_img.DOColor(new Color(.13f, .11f, .13f, .85f), 1f).SetEase(Ease.OutCubic);
         gameOverReasonText.rectTransform.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc);
-        GameOverPanel.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc);
+
+        retryButton.transform.DOScale(1.1f, .75f).
+        SetEase(Ease.InOutSine).
+        SetDelay(.25f).
+        OnComplete(() =>
+        {
+            retryButton.transform.DOScale(1f, .75f).
+            SetDelay(.25f).
+            SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+        });
+
+        GameOverPanel.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc).OnComplete(() =>
+        {
+            gameOverStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, 15f), 1f, RotateMode.Fast).
+            SetEase(Ease.InOutSine).
+            OnComplete(() =>
+            {
+                gameOverStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, -15f), 1f, RotateMode.Fast).
+                SetEase(Ease.InOutSine).
+                SetLoops(-1, LoopType.Yoyo);
+            });
+            GameOverScreen_img.DOColor(new Color(.13f, .11f, .13f, 1f), 5f);
+        });
     }
 
     void NoLife_GameOverScreen()
     {
+        GameOverScreen_img.gameObject.SetActive(true);
+        gameOverReasonText.text = "GAME OVER";
+        gameOverStarValueText.text = LevelEconomyManager.instance.levelStar.ToString();
+        GameOverScreen_img.DOColor(new Color(.13f, .11f, .13f, .85f), 1f).SetEase(Ease.OutCubic);
+        gameOverReasonText.rectTransform.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc);
 
+        retryButton.transform.DOScale(1.1f, .75f).
+        SetEase(Ease.InOutSine).
+        SetDelay(.25f).
+        OnComplete(() =>
+        {
+            retryButton.transform.DOScale(1f, .75f).
+            SetDelay(.25f).
+            SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+        });
+
+        GameOverPanel.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc).OnComplete(() =>
+        {
+            gameOverStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, 15f), 1f, RotateMode.Fast).
+            SetEase(Ease.InOutSine).
+            OnComplete(() =>
+            {
+                gameOverStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, -15f), 1f, RotateMode.Fast).
+                SetEase(Ease.InOutSine).
+                SetLoops(-1, LoopType.Yoyo);
+            });
+            GameOverScreen_img.DOColor(new Color(.13f, .11f, .13f, 1f), 5f);
+        });
     }
+    #endregion
+
 }
