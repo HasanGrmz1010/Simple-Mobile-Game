@@ -26,4 +26,5 @@ public class LevelEventManager : MonoBehaviour
     public static Action onNoLifeRemains;
     public static Action onPausedGame;
     public static Action onResumedGame;
+    public static Action onLevelPassed;
 }

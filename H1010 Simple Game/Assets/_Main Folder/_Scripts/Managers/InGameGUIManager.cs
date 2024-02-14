@@ -33,8 +33,10 @@ public class InGameGUIManager : MonoBehaviour
     
     [SerializeField] Image GameOverScreen_img;
     [SerializeField] Image PauseMenuScreen_img;
+    [SerializeField] Image LevelPassedScreen_img;
     [SerializeField] RectTransform GameOverPanel;
     [SerializeField] RectTransform PauseMenuPanel;
+    [SerializeField] RectTransform LevelPassedPanel;
     [SerializeField] RectTransform starIndicator;
     [SerializeField] Image curtain;
 
@@ -43,14 +45,19 @@ public class InGameGUIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI gameOverReasonText;
     [SerializeField] TextMeshProUGUI gameOverStarValueText;
+    [SerializeField] TextMeshProUGUI levelPassedText;
+    [SerializeField] TextMeshProUGUI levelPassedStarValueText;
+    [SerializeField] TextMeshProUGUI levelStarGoalText;
     
 
     [Header("___________ BUTTONS ___________")]
     [SerializeField] Button pauseButton;
     [SerializeField] Button retryButton;
+    [SerializeField] Button nextLevelButton;
 
     [Header("___________ ICONS ___________")]
     [SerializeField] Image gameOverStarIMG;
+    [SerializeField] Image levelPassedStarIMG;
     [SerializeField] Image adIcon;
     [SerializeField] List<Image> hearts = new List<Image>();
 
@@ -59,22 +66,20 @@ public class InGameGUIManager : MonoBehaviour
         // Event Subscribtions
         LevelEventManager.onTimesUp += NoTimeLeft_GameOverScreen;
         LevelEventManager.onNoLifeRemains += NoLife_GameOverScreen;
+        LevelEventManager.onLevelPassed += LevelPassed_Screen;
     }
 
     private void OnDisable()
     {
         LevelEventManager.onTimesUp -= NoTimeLeft_GameOverScreen;
         LevelEventManager.onNoLifeRemains -= NoLife_GameOverScreen;
-    }
-
-    private void OnDestroy()
-    {
-        
+        LevelEventManager.onLevelPassed -= LevelPassed_Screen;
     }
 
     private void Start()
     {
         lifeHeart_index = 2;
+        levelStarGoalText.text = "GOAL " + LevelEconomyManager.instance.starGoal.ToString();
         curtain.gameObject.SetActive(true);
         curtain.DOColor(new Color(0f, 0f, 0f, 0f), .35f).OnComplete(() =>
         {
@@ -113,6 +118,11 @@ public class InGameGUIManager : MonoBehaviour
             Destroy(star.gameObject);
             starIndicator.DOPunchScale(Vector3.one / 5f, .35f, 1, .5f);
             starAmountText.text = LevelEconomyManager.instance.levelStar.ToString();
+            
+            if (LevelEconomyManager.instance.hasReachedStarGoal())
+            {
+                LevelEventManager.onLevelPassed();
+            }
         });
         
     }
@@ -157,6 +167,14 @@ public class InGameGUIManager : MonoBehaviour
         });
     }
 
+    public void NextLevel_Button()
+    {
+        curtain.gameObject.SetActive(true);
+        curtain.DOColor(new Color(0f, 0f, 0f, 1f), .35f).OnComplete(() =>
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        });
+    }
     #region Game End State Functions
     void NoTimeLeft_GameOverScreen()
     {
@@ -219,6 +237,38 @@ public class InGameGUIManager : MonoBehaviour
                 SetLoops(-1, LoopType.Yoyo);
             });
             GameOverScreen_img.DOColor(new Color(.13f, .11f, .13f, 1f), 5f);
+        });
+    }
+
+    void LevelPassed_Screen()
+    {
+        LevelPassedScreen_img.gameObject.SetActive(true);
+        levelPassedText.text = "LEVEL PASSED";
+        levelPassedStarValueText.text = LevelEconomyManager.instance.levelStar.ToString();
+        LevelPassedScreen_img.DOColor(new Color(.13f, .11f, .13f, .85f), 1f).SetEase(Ease.OutCubic);
+        levelPassedText.rectTransform.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc);
+
+        nextLevelButton.transform.DOScale(1.1f, .75f).
+        SetEase(Ease.InOutSine).
+        SetDelay(.25f).
+        OnComplete(() =>
+        {
+            nextLevelButton.transform.DOScale(1f, .75f).
+            SetDelay(.25f).
+            SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+        });
+
+        LevelPassedPanel.DOLocalMoveX(0f, .5f).SetEase(Ease.OutCirc).OnComplete(() =>
+        {
+            levelPassedStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, 15f), 1f, RotateMode.Fast).
+            SetEase(Ease.InOutSine).
+            OnComplete(() =>
+            {
+                levelPassedStarIMG.rectTransform.DORotate(new Vector3(45f, 0f, -15f), 1f, RotateMode.Fast).
+                SetEase(Ease.InOutSine).
+                SetLoops(-1, LoopType.Yoyo);
+            });
+            LevelPassedScreen_img.DOColor(new Color(.13f, .11f, .13f, 1f), 5f);
         });
     }
     #endregion

@@ -21,15 +21,19 @@ public class Timer : MonoBehaviour
 
     private void OnEnable()
     {
-        LevelEventManager.onPausedGame += GamePaused_Behaviour;
         LevelEventManager.onNoLifeRemains += GamePaused_Behaviour;
+        LevelEventManager.onLevelPassed += GamePaused_Behaviour;
+
+        LevelEventManager.onPausedGame += GamePaused_Behaviour;
         LevelEventManager.onResumedGame += GameResumed_Behaviour;
     }
 
     private void OnDisable()
     {
-        LevelEventManager.onPausedGame -= GamePaused_Behaviour;
         LevelEventManager.onNoLifeRemains -= GamePaused_Behaviour;
+        LevelEventManager.onLevelPassed -= GamePaused_Behaviour;
+
+        LevelEventManager.onPausedGame -= GamePaused_Behaviour;
         LevelEventManager.onResumedGame -= GameResumed_Behaviour;
     }
 

@@ -17,6 +17,8 @@ public class Box : MonoBehaviour
     {
         LevelEventManager.onTimesUp += GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains += GameOver_Behaviour;
+        LevelEventManager.onLevelPassed += GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame += PausedGame_Behaviour;
         LevelEventManager.onResumedGame += ResumeGame_Behaviour;
     }
@@ -25,6 +27,8 @@ public class Box : MonoBehaviour
     {
         LevelEventManager.onTimesUp -= GameOver_Behaviour;
         LevelEventManager.onNoLifeRemains -= GameOver_Behaviour;
+        LevelEventManager.onLevelPassed -= GameOver_Behaviour;
+        
         LevelEventManager.onPausedGame -= PausedGame_Behaviour;
         LevelEventManager.onResumedGame -= ResumeGame_Behaviour;
     }
@@ -80,7 +84,6 @@ public class Box : MonoBehaviour
             transform.DOScale(.01f, .5f).SetEase(Ease.InBack).OnComplete(() =>
             {
                 Destroy(this.gameObject);
-                //this.gameObject.SetActive(false);
             });
         }
         else
